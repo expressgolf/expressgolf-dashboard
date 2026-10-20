@@ -449,6 +449,15 @@ S.rwin=()=>`<div class="art" style="width:1080px;height:1920px">
  <div style="position:absolute;left:80px;right:80px;top:1560px" class="p"><span style="font-size:48px">${R.entries} players entered. Well played, ${R.top5[0].split(' ')[0]}.</span></div>
  <div class="legal" style="position:absolute;left:80px;right:80px;bottom:130px;font-size:38px">Next up: ${W.course} · Hole ${W.hole} · ${W.dayShort} · ${W.time}</div>
 </div>`;
+S.sstory=()=>{const rows=R.standings;return `<div class="art" style="width:1080px;height:1920px">
+ <div style="position:absolute;left:80px;right:80px;top:150px">${lockup(54,24)}</div>
+ <div style="position:absolute;left:80px;right:80px;top:300px">
+   <div class="eyebrow" style="font-size:34px">Express Cup · Road to the semi-final</div>
+   <div class="title" style="font-size:150px;margin-top:14px;line-height:.9">Standings<br>after week ${R.n}</div></div>
+ <div style="position:absolute;left:80px;right:80px;top:650px">
+  <table>${rows.map(r=>`<tr><td class="pos" style="font-size:46px;padding:12px 0;width:120px">${r[0]}</td><td style="font-size:46px">${r[1]}${r[3]?`<span class="w" style="font-size:22px;padding:4px 11px;margin-left:12px">Qualified</span>`:''}</td><td class="pt" style="font-size:46px;color:var(--lime)">${r[2]}</td></tr>`).join('')}</table></div>
+ <div class="legal" style="position:absolute;left:80px;right:80px;bottom:140px;font-size:30px;color:var(--mute)">Weekly winners and the top 14 on points reach the semi-final. Grand final: ${D.prize.final.toLowerCase()}.</div>
+</div>`;};
 document.getElementById('root').innerHTML=S[f]();
 function pinTraces(){document.querySelectorAll('[data-pin]').forEach(box=>{
   const img=box.querySelector('img'); const bw=box.clientWidth,bh=box.clientHeight;
