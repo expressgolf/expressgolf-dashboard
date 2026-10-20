@@ -14,10 +14,10 @@ window.EG = {
     yards: 131,
     photo: "img/w04_gleneagles5_inner.jpg",
     card: "img/w04_gleneagles5_inner.jpg",
-    qr: "img/qr_gleneagles.png",
+    qr: "img/qr_week04.png",
     pin: [0.41, 0.36],
-    prize: "Callaway Halloween ball + Tour Authentic ball",
-    joinUrl: "api.toptracer.com/app/event?eventid=cbcc5d73…"
+    prize: "Callaway Halloween Ball / Tour Authentic Ball",
+    joinUrl: "https://api.toptracer.com/app/event?eventid=cbcc5d73-1c01-48e7-8d0e-0bfd8272d806"
   },
   prize: {
     weekly: "Weekly prize + a semi-final place",
