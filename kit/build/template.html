@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>Express Cup artwork</title>
+<style>
+@font-face{font-family:B;src:url(fonts/barlow-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:B;src:url(fonts/barlow-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:FK;src:url(fonts/FKGrotesk-Medium.woff2);font-weight:500}
+@font-face{font-family:B;src:url(fonts/barlow-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:B;src:url(fonts/barlow-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:BC;src:url(fonts/barlow-condensed-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:BC;src:url(fonts/barlow-condensed-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:BC;src:url(fonts/barlow-condensed-latin-800-normal.woff2);font-weight:800}
+@font-face{font-family:BC;src:url(fonts/barlow-condensed-latin-800-italic.woff2);font-weight:800;font-style:italic}
+:root{
+  --teal:#023C46; --deep:#01252B; --ink:#011A1F; --lime:#85FF85; --cream:#F7F8F0;
+  --white:#fff; --mute:rgba(247,248,240,.72); --line:rgba(247,248,240,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink)}
+html.clear,html.clear body{background:transparent}
+body{font-family:FK,B,sans-serif;color:var(--cream);-webkit-font-smoothing:antialiased}
+.art{position:relative;overflow:hidden;
+  background:
+    radial-gradient(120% 70% at 85% 0%, rgba(133,255,133,.10), transparent 55%),
+    radial-gradient(90% 60% at 0% 100%, rgba(0,0,0,.45), transparent 60%),
+    linear-gradient(180deg,var(--teal) 0%, var(--deep) 100%);}
+.trace{position:absolute;inset:0;pointer-events:none}
+.trace path{fill:none;stroke:var(--lime);stroke-linecap:round}
+.lockup{display:flex;align-items:center}
+.lockup img{display:block}
+.lockup .div{width:2px;align-self:stretch;background:rgba(247,248,240,.45)}
+.eyebrow{font-family:BC;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.title{font-family:BC;font-weight:800;text-transform:uppercase;line-height:.86;color:var(--white);letter-spacing:-.005em}
+.sub{font-family:BC;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--cream)}
+.photo{position:relative;background:#000;border:solid var(--white);box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.photo img{display:block;width:100%;height:100%;object-fit:cover}
+.chips{position:absolute;left:0;bottom:0;display:flex}
+.chip{font-family:BC;font-weight:800;text-transform:uppercase;letter-spacing:.04em;background:var(--teal);color:var(--white)}
+.chip.lime{background:var(--lime);color:var(--teal)}
+.k{font-family:BC;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.v{font-family:BC;font-weight:800;text-transform:uppercase;color:var(--white);line-height:1}
+.p{color:var(--mute);line-height:1.35}
+.qr{background:#fff;display:block}
+.pts{display:flex}
+.pts div{display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--line);font-family:BC;font-weight:800;color:var(--white)}
+.pts div:first-child{background:var(--lime);color:var(--teal);border-color:var(--lime)}
+.pts small{font-family:BC;font-weight:700;letter-spacing:.1em;opacity:.8}
+.final{background:var(--lime);color:var(--teal)}
+.final .k{color:var(--teal)}
+.final .v{color:var(--teal)}
+.legal{color:rgba(247,248,240,.55)}
+table{border-collapse:collapse;width:100%}
+td{vertical-align:middle;font-family:BC;font-weight:700;text-transform:uppercase;color:var(--white);border-bottom:2px solid var(--line)}
+td.pos{color:var(--lime)} td.pt{text-align:right}
+td .w{display:inline-block;background:var(--lime);color:var(--teal);font-weight:800;letter-spacing:.06em;vertical-align:middle}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="data.js"></script>
+<script>
+const D=window.EG, W=D.week, R=D.results;
+const f=new URLSearchParams(location.search).get('f')||'poster'; if(f==='overlay'||f==='poverlay')document.documentElement.classList.add('clear');
+const ord=n=>n+(['th','st','nd','rd'][(n%100>10&&n%100<14)?0:Math.min(n%10,4)%4]||'th');
+const ordx=n=>{const s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);};
+function lockup(h,gap){return `<div class="lockup" style="gap:${gap}px;height:${h}px">
+  <img src="img/eg_white.svg" style="height:${h*0.62}px">
+  <span class="div"></span>
+  <img src="img/pb_white.png" style="height:${h}px">
+</div>`;}
+// ball-flight trace: tee bottom-left, pin target
+function trace(w,h,x0,y0,x1,y1,peak,sw){
+  const cx=(x0+x1)/2, cy=Math.min(y0,y1)-peak;
+  return `<svg class="trace" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">
+   <path d="M${x0},${y0} Q${cx},${cy} ${x1},${y1}" stroke-width="${sw}" opacity=".9"/>
+   <circle cx="${x1}" cy="${y1}" r="${sw*2.2}" fill="#85FF85"/></svg>`;}
+const S={};
+S.poster=()=>{const w=1240,h=1754;return `<div class="art" style="width:${w}px;height:${h}px">
+ <div style="position:absolute;left:90px;right:90px;top:80px">${lockup(64,30)}</div>
+ <div style="position:absolute;left:90px;top:230px">
+   <div class="eyebrow" style="font-size:34px">Week ${W.n} of ${W.of} &nbsp;·&nbsp; ${D.game}</div>
+   <div class="title" style="font-size:200px;margin-top:18px">${D.comp}</div>
+ </div>
+ <div class="photo" data-pin="1" style="position:absolute;left:90px;right:90px;top:500px;height:540px;border-width:10px">
+   <img src="${W.photo}">
+   <div class="chips"><div class="chip" style="font-size:52px;padding:18px 28px">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:52px;padding:18px 28px">${W.yards} yds</div></div>
+ </div>
+ <div style="position:absolute;left:90px;right:90px;top:1095px;display:grid;grid-template-columns:1fr 290px;gap:50px">
+   <div>
+     <div class="k" style="font-size:28px">When</div>
+     <div class="v" style="font-size:74px;margin-top:8px">${W.day}</div>
+     <div class="v" style="font-size:74px;color:var(--lime)">${W.time}</div>
+     <div class="k" style="font-size:28px;margin-top:34px">How to enter</div>
+     <div class="p" style="font-size:31px;margin-top:8px">Free to enter. Scan the code to register in the Toptracer&nbsp;Range app, then play on any bay between ${W.time.replace(' – ',' and ')}.</div>
+   </div>
+   <div style="text-align:center">
+     <img class="qr" src="${W.qr}" style="width:290px;height:290px;padding:14px">
+     <div class="k" style="font-size:26px;margin-top:14px">Scan to join</div>
+   </div>
+ </div>
+ <div style="position:absolute;left:90px;right:90px;top:1490px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:stretch">
+   <div><div class="k" style="font-size:22px;margin-bottom:10px">Top 5 score points</div>
+     <div class="pts" style="gap:8px">${D.points.map((p,i)=>`<div style="width:72px;height:72px;font-size:38px">${p}<small style="font-size:15px">${ordx(i+1).toUpperCase()}</small></div>`).join('')}</div></div>
+   <div class="final" style="padding:16px 26px;display:flex;flex-direction:column;justify-content:center">
+     <div class="k" style="font-size:22px">Grand final prize</div>
+     <div class="v" style="font-size:40px;margin-top:6px">${D.prize.final}</div></div>
+ </div>
+ <div class="legal" style="position:absolute;left:90px;right:90px;bottom:44px;font-size:19px;display:flex;justify-content:space-between">
+   <span>This week's prize: ${W.prize} (subject to stock), plus a semi-final place. Full rules: ${D.url}</span><span>#ToptracerRange</span></div>
+</div>`;};
+S.feed=()=>{const w=1080,h=1350;return `<div class="art" style="width:${w}px;height:${h}px">
+ <div style="position:absolute;left:70px;right:70px;top:64px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:70px;top:176px">
+   <div class="eyebrow" style="font-size:30px">Week ${W.n} of ${W.of} &nbsp;·&nbsp; ${W.dayShort} &nbsp;·&nbsp; Free to enter</div>
+   <div class="title" style="font-size:170px;margin-top:12px">${D.comp}</div>
+   <div class="sub" style="font-size:44px;margin-top:10px">${D.game}</div>
+ </div>
+ <div class="photo" data-pin="1" style="position:absolute;left:70px;right:70px;top:470px;height:470px;border-width:9px">
+   <img src="${W.photo}">
+   <div class="chips"><div class="chip" style="font-size:46px;padding:14px 24px">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:46px;padding:14px 24px">${W.yards} yds</div></div>
+ </div>
+ <div style="position:absolute;left:70px;right:70px;top:990px;display:flex;justify-content:space-between;align-items:flex-end">
+   <div><div class="v" style="font-size:64px">${W.day}</div><div class="v" style="font-size:64px;color:var(--lime)">${W.time}</div><div class="p" style="font-size:30px;margin-top:14px"><span class="k" style="font-size:24px">This week's prize</span><br>${W.prize}</div></div>
+ </div>
+ <div class="legal" style="position:absolute;left:70px;right:70px;bottom:44px;font-size:26px;color:var(--mute)">Free to enter &nbsp;·&nbsp; Register in the Toptracer&nbsp;Range app &nbsp;·&nbsp; Details: link in bio</div>
+</div>`;};
+S.story=()=>{const w=1080,h=1920;return `<div class="art" style="width:${w}px;height:${h}px">
+ <div style="position:absolute;left:80px;right:80px;top:150px">${lockup(54,24)}</div>
+ <div style="position:absolute;left:80px;top:290px">
+   <div class="eyebrow" style="font-size:34px">Week ${W.n} of ${W.of} &nbsp;·&nbsp; Free to enter</div>
+   <div class="title" style="font-size:190px;margin-top:14px">${D.comp}</div>
+   <div class="sub" style="font-size:48px;margin-top:12px">${D.game}</div>
+ </div>
+ <div class="photo" data-pin="1" style="position:absolute;left:80px;right:80px;top:700px;height:500px;border-width:10px">
+   <img src="${W.photo}">
+   <div class="chips"><div class="chip" style="font-size:44px;padding:14px 22px">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:44px;padding:14px 22px">${W.yards} yds</div></div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:1255px">
+   <div class="v" style="font-size:86px">${W.day}</div>
+   <div class="v" style="font-size:86px;color:var(--lime)">${W.time}</div>
+   <div class="p" style="font-size:36px;margin-top:22px"><span class="k" style="font-size:28px">This week's prize</span><br>${W.prize}</div><div class="p" style="font-size:32px;margin-top:18px;color:var(--mute)">Free to enter. Register in the Toptracer&nbsp;Range app, then play on any bay.</div>
+ </div>
+ <div class="final" style="position:absolute;left:80px;right:80px;top:1690px;padding:22px 30px">
+   <div class="k" style="font-size:26px">Grand final prize</div><div class="v" style="font-size:52px;margin-top:6px">${D.prize.final}</div></div>
+</div>`;};
+S.teaser=()=>{const w=1080,h=1350;return `<div class="art" style="width:${w}px;height:${h}px">
+ <div style="position:absolute;left:80px;right:80px;top:84px">${lockup(50,24)}</div>
+ <div style="position:absolute;left:80px;top:214px">
+   <div class="eyebrow" style="font-size:29px">Week ${W.n} of ${W.of} &nbsp;·&nbsp; Free to enter</div>
+   <div class="title" style="font-size:158px;margin-top:14px">${D.comp}</div>
+   <div class="sub" style="font-size:42px;margin-top:12px">${D.game}</div>
+ </div>
+ <div class="photo" data-pin="1" style="position:absolute;left:80px;right:80px;top:506px;height:432px;border-width:9px">
+   <img src="${W.photo}">
+   <div class="chips"><div class="chip" style="font-size:44px;padding:13px 22px">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:44px;padding:13px 22px">${W.yards} yds</div></div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:1016px">
+   <div class="title" style="font-size:132px;color:var(--lime);line-height:.9">Tomorrow</div>
+   <div class="v" style="font-size:56px;margin-top:18px">${W.dayShort} · ${W.time}</div>
+   <div class="p" style="font-size:30px;margin-top:24px"><span class="k" style="font-size:23px">This week's prize</span><br>${W.prize}</div>
+ </div>
+</div>`;};
+S.tstory=()=>{const w=1080,h=1920;return `<div class="art" style="width:${w}px;height:${h}px">
+ <div style="position:absolute;left:80px;right:80px;top:150px">${lockup(54,24)}</div>
+ <div style="position:absolute;left:80px;top:290px">
+   <div class="eyebrow" style="font-size:34px">Week ${W.n} of ${W.of} &nbsp;·&nbsp; Free to enter</div>
+   <div class="title" style="font-size:190px;margin-top:14px">${D.comp}</div>
+   <div class="sub" style="font-size:48px;margin-top:12px">${D.game}</div>
+ </div>
+ <div class="photo" data-pin="1" style="position:absolute;left:80px;right:80px;top:700px;height:500px;border-width:10px">
+   <img src="${W.photo}">
+   <div class="chips"><div class="chip" style="font-size:44px;padding:14px 22px">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:44px;padding:14px 22px">${W.yards} yds</div></div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:1255px">
+   <div class="title" style="font-size:170px;color:var(--lime);line-height:.9">Tomorrow</div>
+   <div class="v" style="font-size:72px;margin-top:16px">${W.dayShort} · ${W.time}</div>
+   <div class="p" style="font-size:36px;margin-top:22px"><span class="k" style="font-size:28px">This week's prize</span><br>${W.prize}</div>
+   <div class="p" style="font-size:32px;margin-top:18px;color:var(--mute)">Free to enter. Register in the Toptracer&nbsp;Range app, then play on any bay.</div>
+ </div>
+ <div class="final" style="position:absolute;left:80px;right:80px;top:1726px;padding:22px 30px">
+   <div class="k" style="font-size:26px">Grand final prize</div><div class="v" style="font-size:52px;margin-top:6px">${D.prize.final}</div></div>
+</div>`;};
+S.tstory1=()=>`<div class="art" style="width:1080px;height:1920px">
+ <div style="position:absolute;left:80px;right:80px;top:170px">${lockup(56,26)}</div>
+ <div style="position:absolute;left:80px;right:80px;top:330px">
+   <div class="eyebrow" style="font-size:36px">Week ${W.n} of ${W.of} &nbsp;·&nbsp; Free to enter</div>
+   <div class="title" style="font-size:196px;margin-top:16px">${D.comp}</div>
+   <div class="sub" style="font-size:52px;margin-top:14px">${D.game}</div>
+ </div>
+ <div class="photo" data-pin="1" style="position:absolute;left:80px;right:80px;top:890px;height:520px;border-width:10px">
+   <img src="${W.photo}">
+   <div class="chips"><div class="chip" style="font-size:46px;padding:16px 24px">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:46px;padding:16px 24px">${W.yards} yds</div></div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:1520px">
+   <div class="title" style="font-size:196px;color:var(--lime);line-height:.9">Tomorrow</div>
+   <div class="v" style="font-size:72px;margin-top:22px">${W.dayShort} · ${W.time}</div>
+ </div>
+</div>`;
+S.tstory2=()=>`<div class="art" style="width:1080px;height:1920px">
+ <div style="position:absolute;left:80px;right:80px;top:170px">${lockup(56,26)}</div>
+ <div style="position:absolute;left:80px;right:80px;top:340px">
+   <div class="eyebrow" style="font-size:36px">${D.comp} · ${D.game}</div>
+   <div class="title" style="font-size:156px;margin-top:16px">${W.day}</div>
+   <div class="title" style="font-size:156px;color:var(--lime)">${W.time}</div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:880px">
+   <div class="k" style="font-size:36px">This week's prize</div>
+   <div class="v" style="font-size:78px;margin-top:12px;line-height:1.05">${W.prize}</div>
+ </div>
+ <div class="final" style="position:absolute;left:80px;right:80px;top:1240px;padding:44px 48px">
+   <div class="k" style="font-size:34px">Grand final prize</div>
+   <div class="v" style="font-size:88px;margin-top:12px">${D.prize.final}</div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:1640px">
+   <div class="p" style="font-size:42px">Free to enter · Any age or ability</div>
+ </div>
+</div>`;
+S.tstory3=()=>`<div class="art" style="width:1080px;height:1920px">
+ <div style="position:absolute;left:80px;right:80px;top:180px">${lockup(56,26)}</div>
+ <div style="position:absolute;left:80px;right:80px;top:380px">
+   <div class="eyebrow" style="font-size:36px">Enter now</div>
+   <div class="title" style="font-size:168px;margin-top:16px;line-height:.9">Tap to<br>register</div>
+   <div class="p" style="font-size:42px;margin-top:34px">Register this week's event in the Toptracer&nbsp;Range app, then play Closest to the Pin on any bay. ${W.dayShort}, ${W.time}.</div>
+ </div>
+ <div style="position:absolute;left:0;right:0;top:1230px;text-align:center">
+   <span class="v" style="font-size:64px;color:var(--lime)">Link below &nbsp;↓</span>
+ </div>
+ <div style="position:absolute;left:150px;right:150px;top:1340px;height:200px;border:4px dashed rgba(133,255,133,.65);border-radius:30px;display:flex;align-items:center;justify-content:center;text-align:center">
+   <span class="k" style="font-size:38px;color:var(--lime);line-height:1.3">Add your link<br>sticker here</span>
+ </div>
+</div>`;
+S.highlight=()=>`<div class="art" style="width:1080px;height:1080px;display:flex;align-items:center;justify-content:center">
+ <svg viewBox="0 0 120 130" width="560" height="607" role="img" aria-label="Express Cup trophy">
+   <path d="M35,30 C16,30 16,56 38,59" fill="none" stroke="#85FF85" stroke-width="7" stroke-linecap="round"/>
+   <path d="M85,30 C104,30 104,56 82,59" fill="none" stroke="#85FF85" stroke-width="7" stroke-linecap="round"/>
+   <path d="M34,22 H86 V40 C86,63 73,76 60,76 C47,76 34,63 34,40 Z" fill="#85FF85"/>
+   <path d="M60,34 l3.2,6.5 7.2,1 -5.2,5.1 1.2,7.1 -6.4,-3.4 -6.4,3.4 1.2,-7.1 -5.2,-5.1 7.2,-1 Z" fill="#023C46"/>
+   <rect x="54.5" y="76" width="11" height="17" fill="#85FF85"/>
+   <rect x="43" y="92" width="34" height="8" rx="3" fill="#85FF85"/>
+   <rect x="35" y="102" width="50" height="11" rx="3" fill="#85FF85"/>
+ </svg>
+</div>`;
+function tvBase(inner){return `<div class="art" style="width:1920px;height:1080px">${inner}</div>`;}
+S.tv=()=>tvBase(`
+ <div style="position:absolute;left:0;top:0;width:900px;height:1080px"><div class="photo" data-pin="1" data-sx="0.62" style="width:100%;height:100%;border:0;box-shadow:none"><img src="${W.photo}"></div></div>
+ <div style="position:absolute;left:0;top:0;width:900px;height:1080px;background:linear-gradient(90deg,rgba(1,37,43,0) 55%,var(--teal) 100%)"></div>
+ <div style="position:absolute;left:40px;bottom:40px;display:flex"><div class="chip" style="font-size:54px;padding:16px 26px">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:54px;padding:16px 26px">${W.yards} yds</div></div>
+ <div style="position:absolute;left:980px;right:90px;top:70px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:980px;right:90px;top:200px">
+   <div class="eyebrow" style="font-size:32px">Week ${W.n} of ${W.of} · ${D.game}</div>
+   <div class="title" style="font-size:150px;margin-top:10px">${D.comp}</div>
+   <div class="v" style="font-size:70px;margin-top:34px">${W.day}</div>
+   <div class="v" style="font-size:70px;color:var(--lime)">${W.time}</div>
+ </div>
+ <div style="position:absolute;left:980px;right:90px;top:720px;display:flex;gap:40px;align-items:center">
+   <img class="qr" src="${W.qr}" style="width:250px;height:250px;padding:12px">
+   <div><div class="k" style="font-size:28px">Scan to join</div>
+   <div class="p" style="font-size:32px;margin-top:10px">Free to enter. Register in the Toptracer&nbsp;Range app. Weekly winner earns a semi-final place. Grand final: ${D.prize.final.toLowerCase()}.</div></div>
+ </div>`);
+// TV video slides
+S.tv1=()=>tvBase(`<div class="photo" data-pin="1" data-sx="0.86" style="position:absolute;inset:0;border:0;box-shadow:none"><img src="${W.photo}"></div>
+ <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(1,37,43,.7) 0%,rgba(1,37,43,0) 26%,rgba(1,37,43,0) 42%,rgba(1,37,43,.75) 66%,rgba(1,37,43,.96) 100%)"></div>
+ <div style="position:absolute;left:90px;right:90px;top:70px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:90px;bottom:90px">
+   <div class="eyebrow" style="font-size:36px">This Monday · Week ${W.n} of ${W.of}</div>
+   <div class="title" style="font-size:190px;margin-top:10px">${W.course}</div>
+   <div style="display:flex;margin-top:24px"><div class="chip" style="font-size:64px;padding:16px 30px">Hole ${W.hole}</div><div class="chip lime" style="font-size:64px;padding:16px 30px">${W.yards} yds</div></div>
+ </div>`);
+S.tv2=()=>tvBase(`
+ <div style="position:absolute;left:110px;right:110px;top:70px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:110px;top:230px;width:1100px">
+   <div class="eyebrow" style="font-size:36px">${D.comp} · ${D.game}</div>
+   <div class="title" style="font-size:150px;margin-top:14px">${W.day}</div>
+   <div class="title" style="font-size:150px;color:var(--lime)">${W.time}</div>
+   <div class="p" style="font-size:40px;margin-top:40px;max-width:980px">Free to enter. Scan the code to register in the Toptracer&nbsp;Range app, then play ${D.game} on any bay.</div>
+ </div>
+ <div style="position:absolute;right:130px;top:300px;text-align:center">
+   <img class="qr" src="${W.qr}" style="width:440px;height:440px;padding:20px">
+   <div class="k" style="font-size:34px;margin-top:20px">Scan to join</div></div>`);
+S.tv3=()=>tvBase(`
+ <div style="position:absolute;left:110px;right:110px;top:70px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:110px;top:230px">
+   <div class="eyebrow" style="font-size:36px">26 weeks · one grand final</div>
+   <div class="title" style="font-size:120px;margin-top:14px">Win the weekly prize<br>and a semi-final place</div>
+   <div class="p" style="font-size:40px;margin-top:20px"><span class="k" style="font-size:30px">This week's prize</span>&nbsp; ${W.prize}</div>
+ </div>
+ <div style="position:absolute;left:110px;top:640px">
+   <div class="k" style="font-size:30px;margin-bottom:16px">Top 5 every week score points</div>
+   <div class="pts" style="gap:14px">${D.points.map((p,i)=>`<div style="width:120px;height:120px;font-size:62px">${p}<small style="font-size:22px">${ordx(i+1).toUpperCase()}</small></div>`).join('')}</div></div>
+ <div class="final" style="position:absolute;right:110px;top:640px;width:860px;padding:30px 40px">
+   <div class="k" style="font-size:30px">Grand final prize · April 2027</div>
+   <div class="v" style="font-size:76px;margin-top:10px">${D.prize.final}</div></div>`);
+S.standingsTv=()=>{const rows=R.standings;return tvBase(`
+ <div style="position:absolute;left:110px;right:110px;top:70px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:110px;top:220px;width:700px">
+   <div class="eyebrow" style="font-size:34px">${D.comp} standings</div>
+   <div class="title" style="font-size:150px;margin-top:12px">After<br>week ${R.n}</div>
+   <div class="p" style="font-size:32px;margin-top:30px">Weekly winners and the top 14 on points qualify for the semi-final. Grand final prize: ${D.prize.final.toLowerCase()}.</div></div>
+ <div style="position:absolute;left:900px;right:110px;top:210px">
+  <table>${rows.map(r=>`<tr><td class="pos" style="font-size:52px;padding:14px 0;width:110px">${r[0]}</td><td style="font-size:52px">${r[1]} ${r[3]?`<span class="w" style="font-size:24px;padding:4px 10px;margin-left:10px">Winner</span>`:''}</td><td class="pt" style="font-size:52px">${r[2]}</td></tr>`).join('')}</table></div>`);};
+S.results=()=>{const w=1080,h=1350;const rows=R.standings.slice(0,8);return `<div class="art" style="width:${w}px;height:${h}px">
+ <div style="position:absolute;left:70px;right:70px;top:64px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:70px;top:170px">
+   <div class="eyebrow" style="font-size:28px">Week ${R.n} result · ${R.course} hole ${R.hole} · ${R.yards} yds</div>
+   <div class="k" style="font-size:30px;margin-top:30px;color:var(--mute)">Winner</div>
+   <div class="title" style="font-size:132px;margin-top:4px">${R.top5[0]}</div>
+   <div class="sub" style="font-size:34px;margin-top:10px;color:var(--lime)">Into the semi-final · ${R.entries} players entered</div>
+ </div>
+ <div style="position:absolute;left:70px;right:70px;top:540px">
+  <div class="k" style="font-size:26px;margin-bottom:6px">Standings after week ${R.n}</div>
+  <table>${rows.map(r=>`<tr><td class="pos" style="font-size:42px;padding:13px 0;width:90px">${r[0]}</td><td style="font-size:42px">${r[1]} ${r[3]?`<span class="w" style="font-size:20px;padding:3px 9px;margin-left:8px">Winner</span>`:''}</td><td class="pt" style="font-size:42px">${r[2]}</td></tr>`).join('')}</table></div>
+ <div class="legal" style="position:absolute;left:70px;right:70px;bottom:44px;font-size:24px;color:var(--mute)">Next up: ${W.course} hole ${W.hole}, ${W.dayShort}, ${W.time}</div>
+</div>`;};
+S.overlay=()=>`<div style="width:1920px;height:1080px;position:relative;background:transparent">
+ <div style="position:absolute;left:0;right:0;bottom:0;height:330px;background:linear-gradient(180deg,rgba(2,60,70,0) 0%,rgba(2,60,70,.96) 28%,rgba(1,37,43,.98) 100%)"></div>
+ <div style="position:absolute;left:90px;bottom:60px">
+   <div class="eyebrow" style="font-size:30px">${D.game} · This Monday ${W.time}</div>
+   <div class="title" style="font-size:110px;margin-top:6px">${D.comp}</div></div>
+ <div style="position:absolute;right:90px;bottom:74px">${lockup(48,22)}</div></div>`;
+
+function pBase(inner){return `<div class="art" style="width:1080px;height:1920px">${inner}</div>`;}
+const PL=()=>`<div style="position:absolute;left:80px;right:80px;top:80px">${lockup(54,24)}</div>`;
+S.p1=()=>pBase(`<div class="photo" data-pin="1" data-sx="0.85" style="position:absolute;left:0;top:0;width:1080px;height:1150px;border:0;box-shadow:none"><img src="${W.photo}"></div>
+ <div style="position:absolute;left:0;top:0;width:1080px;height:1150px;background:linear-gradient(180deg,rgba(1,37,43,.75) 0%,rgba(1,37,43,0) 22%,rgba(1,37,43,0) 70%,var(--deep) 100%)"></div>
+ ${PL()}
+ <div style="position:absolute;left:80px;right:80px;top:1180px">
+   <div class="eyebrow" style="font-size:38px">This Monday · Week ${W.n} of ${W.of}</div>
+   <div class="title" style="font-size:170px;margin-top:14px">${W.course}</div>
+   <div style="display:flex;margin-top:30px"><div class="chip" style="font-size:66px;padding:16px 30px;background:#012a31">Hole ${W.hole}</div><div class="chip lime" style="font-size:66px;padding:16px 30px">${W.yards} yds</div></div>
+   <div class="v" style="font-size:76px;margin-top:60px">${W.dayShort} · <span style="color:var(--lime)">${W.time}</span></div>
+ </div>`);
+S.p2=()=>pBase(`${PL()}
+ <div style="position:absolute;left:80px;right:80px;top:260px">
+   <div class="eyebrow" style="font-size:38px">${D.comp} · ${D.game}</div>
+   <div class="title" style="font-size:150px;margin-top:16px">${W.day}</div>
+   <div class="title" style="font-size:150px;color:var(--lime)">${W.time}</div></div>
+ <div style="position:absolute;left:0;right:0;top:880px;text-align:center">
+   <img class="qr" src="${W.qr}" style="width:600px;height:600px;padding:26px;margin:0 auto">
+   <div class="k" style="font-size:44px;margin-top:28px">Scan to join</div>
+   <div class="p" style="font-size:40px;margin:22px 100px 0">Free to enter. Register in the Toptracer&nbsp;Range app, then play ${D.game} on any bay.</div></div>`);
+S.p3=()=>pBase(`${PL()}
+ <div style="position:absolute;left:80px;right:80px;top:270px">
+   <div class="eyebrow" style="font-size:38px">26 weeks · one grand final</div>
+   <div class="title" style="font-size:130px;margin-top:16px">Win the weekly prize and a semi-final place</div>
+   <div class="k" style="font-size:34px;margin-top:30px">This week's prize</div><div class="p" style="font-size:44px;margin-top:8px">${W.prize}</div></div>
+ <div style="position:absolute;left:80px;right:80px;top:1010px">
+   <div class="k" style="font-size:36px;margin-bottom:22px">Top 5 every week score points</div>
+   <div class="pts" style="gap:18px">${D.points.map((p,i)=>`<div style="width:168px;height:168px;font-size:86px">${p}<small style="font-size:28px">${ordx(i+1).toUpperCase()}</small></div>`).join('')}</div></div>
+ <div class="final" style="position:absolute;left:80px;right:80px;top:1360px;padding:40px 46px">
+   <div class="k" style="font-size:36px">Grand final prize · April 2027</div>
+   <div class="v" style="font-size:96px;margin-top:12px">${D.prize.final}</div></div>`);
+S.p4=()=>pBase(`${PL()}
+ <div style="position:absolute;left:80px;right:80px;top:260px">
+   <div class="eyebrow" style="font-size:38px">${D.comp} standings</div>
+   <div class="title" style="font-size:150px;margin-top:14px">After week ${R.n}</div></div>
+ <div style="position:absolute;left:80px;right:80px;top:640px">
+  <table>${R.standings.map(r=>`<tr><td class="pos" style="font-size:66px;padding:22px 0;width:130px">${r[0]}</td><td style="font-size:66px">${r[1]} ${r[3]?`<span class="w" style="font-size:28px;padding:5px 12px;margin-left:12px">Winner</span>`:''}</td><td class="pt" style="font-size:66px">${r[2]}</td></tr>`).join('')}</table>
+  <div class="p" style="font-size:34px;margin-top:40px">Weekly winners and the top 14 on points qualify for the semi-final.</div></div>`);
+S.pstill=()=>pBase(`<div class="photo" data-pin="1" data-sx="0.85" style="position:absolute;left:0;top:0;width:1080px;height:900px;border:0;box-shadow:none"><img src="${W.photo}"></div>
+ <div style="position:absolute;left:0;top:0;width:1080px;height:900px;background:linear-gradient(180deg,rgba(1,37,43,.75) 0%,rgba(1,37,43,0) 25%,rgba(1,37,43,0) 70%,var(--deep) 100%)"></div>
+ ${PL()}
+ <div style="position:absolute;left:80px;right:80px;top:860px">
+   <div class="eyebrow" style="font-size:34px">Week ${W.n} of ${W.of} · ${D.game}</div>
+   <div class="title" style="font-size:130px;margin-top:10px">${D.comp}</div>
+   <div style="display:flex;margin-top:20px"><div class="chip" style="font-size:52px;padding:14px 24px;background:#012a31">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:52px;padding:14px 24px">${W.yards} yds</div></div>
+   <div class="v" style="font-size:78px;margin-top:40px">${W.day}</div>
+   <div class="v" style="font-size:78px;color:var(--lime)">${W.time}</div></div>
+ <div style="position:absolute;left:80px;right:80px;top:1560px;display:flex;gap:36px;align-items:center">
+   <img class="qr" src="${W.qr}" style="width:270px;height:270px;padding:12px">
+   <div><div class="k" style="font-size:32px">Scan to join</div><div class="p" style="font-size:32px;margin-top:10px">Free to enter. Grand final: ${D.prize.final.toLowerCase()}.</div></div></div>`);
+S.poverlay=()=>`<div style="width:1080px;height:1920px;position:relative">
+ <div style="position:absolute;left:0;right:0;top:0;height:300px;background:var(--deep)"></div>
+ <div style="position:absolute;left:0;right:0;top:908px;bottom:0;background:linear-gradient(180deg,var(--deep) 0%,var(--teal) 100%)"></div>
+ <div style="position:absolute;left:80px;right:80px;top:80px">${lockup(54,24)}</div>
+ <div style="position:absolute;left:80px;right:80px;top:1000px">
+   <div class="eyebrow" style="font-size:38px">${D.game}</div>
+   <div class="title" style="font-size:190px;margin-top:14px">${D.comp}</div>
+   <div class="v" style="font-size:80px;margin-top:40px">This Monday</div>
+   <div class="v" style="font-size:80px;color:var(--lime)">${W.time}</div>
+   <div class="p" style="font-size:38px;margin-top:40px">Free to enter. Register in the Toptracer&nbsp;Range app. Weekly winner earns a semi-final place.</div></div></div>`;
+S.webhero=()=>`<div class="art" style="width:1600px;height:1100px">
+ <div class="photo" data-pin="1" data-sx="0.80" style="position:absolute;inset:0;border:0;box-shadow:none"><img src="${W.photo}"></div>
+ <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(1,37,43,0) 55%,rgba(1,37,43,.85) 100%)"></div>
+ <div style="position:absolute;left:60px;bottom:60px">
+  <div class="eyebrow" style="font-size:34px;margin-bottom:14px">This Monday · Week ${W.n} of ${W.of}</div>
+  <div style="display:flex"><div class="chip" style="font-size:64px;padding:16px 28px">${W.course} · Hole ${W.hole}</div><div class="chip lime" style="font-size:64px;padding:16px 28px">${W.yards} yds</div></div></div></div>`;
+
+const T5=()=>R.top5.map((n,i)=>[ordx(i+1),n,D.points[i]]);
+S.r1=()=>`<div class="art" style="width:1080px;height:1350px">
+ <div style="position:absolute;left:70px;right:70px;top:64px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:70px;right:70px;top:250px">
+   <div class="eyebrow" style="font-size:32px">Express Cup · Week ${R.n} winner</div>
+   <div class="title" style="font-size:150px;margin-top:22px;line-height:.9">${R.top5[0]}</div>
+   <div class="sub" style="font-size:42px;margin-top:26px">Closest to the pin at ${R.course}, hole ${R.hole}</div>
+ </div>
+ <div style="position:absolute;left:70px;right:70px;top:760px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+   <div class="final" style="padding:26px 30px"><div class="k" style="font-size:24px">Wins</div><div class="v" style="font-size:44px;margin-top:8px;line-height:1">${R.prize}</div></div>
+   <div style="border:2px solid var(--line);padding:26px 30px"><div class="k" style="font-size:24px">Plus</div><div class="v" style="font-size:44px;margin-top:8px;line-height:1">A place in the semi-final</div></div>
+ </div>
+ <div style="position:absolute;left:70px;right:70px;top:1050px" class="p"><span style="font-size:34px">${R.entries} players entered. Well played, ${R.top5[0].split(' ')[0]}.</span></div>
+ <div class="legal" style="position:absolute;left:70px;right:70px;bottom:44px;font-size:26px;color:var(--mute)">Next up: ${W.course} hole ${W.hole} · ${W.dayShort} · ${W.time}</div>
+</div>`;
+S.r2=()=>`<div class="art" style="width:1080px;height:1350px">
+ <div style="position:absolute;left:70px;right:70px;top:64px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:70px;right:70px;top:190px">
+   <div class="eyebrow" style="font-size:30px">Week ${R.n} · ${R.course} hole ${R.hole} · ${R.yards} yds</div>
+   <div class="title" style="font-size:120px;margin-top:16px">This week's<br>top 5</div></div>
+ <div style="position:absolute;left:70px;right:70px;top:560px">
+  <table>${T5().map((r,i)=>`<tr><td class="pos" style="font-size:54px;padding:20px 0;width:130px">${r[0].toUpperCase()}</td><td style="font-size:54px">${r[1]}${i==0?`<span class="w" style="font-size:24px;padding:4px 10px;margin-left:14px">Winner</span>`:''}</td><td class="pt" style="font-size:54px;color:var(--lime)">+${r[2]}</td></tr>`).join('')}</table>
+  <div class="k" style="font-size:24px;margin-top:22px;color:var(--mute)">Points towards a semi-final place</div></div>
+ <div class="legal" style="position:absolute;left:70px;right:70px;bottom:44px;font-size:26px;color:var(--mute)">Full standings: link in bio</div>
+</div>`;
+S.r3=()=>{const rows=R.standings.slice(0,10);return `<div class="art" style="width:1080px;height:1350px">
+ <div style="position:absolute;left:70px;right:70px;top:64px">${lockup(52,24)}</div>
+ <div style="position:absolute;left:70px;right:70px;top:190px">
+   <div class="eyebrow" style="font-size:30px">Express Cup · Road to the final</div>
+   <div class="title" style="font-size:120px;margin-top:16px">Standings<br>after week ${R.n}</div></div>
+ <div style="position:absolute;left:70px;right:70px;top:540px">
+  <table>${rows.map(r=>`<tr><td class="pos" style="font-size:44px;padding:13px 0;width:110px">${r[0]}</td><td style="font-size:44px">${r[1]}${r[3]?`<span class="w" style="font-size:20px;padding:3px 9px;margin-left:12px">Qualified</span>`:''}</td><td class="pt" style="font-size:44px">${r[2]}</td></tr>`).join('')}</table></div>
+ <div class="legal" style="position:absolute;left:70px;right:70px;bottom:44px;font-size:24px;color:var(--mute)">Weekly winners and the top 14 on points reach the semi-final. Grand final prize: ${D.prize.final.toLowerCase()}.</div>
+</div>`;};
+S.rstory=()=>`<div class="art" style="width:1080px;height:1920px">
+ <div style="position:absolute;left:80px;right:80px;top:150px">${lockup(54,24)}</div>
+ <div style="position:absolute;left:80px;right:80px;top:300px">
+   <div class="eyebrow" style="font-size:34px">Week ${R.n} winner · ${R.course} hole ${R.hole}</div>
+   <div class="title" style="font-size:160px;margin-top:18px;line-height:.9">${R.top5[0]}</div>
+   <div class="final" style="margin-top:34px;padding:24px 30px"><div class="k" style="font-size:26px">Wins</div><div class="v" style="font-size:48px;margin-top:6px;line-height:1">${R.prize} + a semi-final place</div></div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:960px">
+  <div class="k" style="font-size:30px;margin-bottom:8px">This week's top 5</div>
+  <table>${T5().map((r,i)=>`<tr><td class="pos" style="font-size:54px;padding:20px 0;width:130px">${r[0].toUpperCase()}</td><td style="font-size:54px">${r[1]}</td><td class="pt" style="font-size:54px;color:var(--lime)">+${r[2]}</td></tr>`).join('')}</table></div>
+ <div style="position:absolute;left:80px;right:80px;bottom:150px">
+  <div class="k" style="font-size:28px;color:var(--mute)">Next up</div>
+  <div class="v" style="font-size:56px;margin-top:6px">${W.course} · Hole ${W.hole} · ${W.dayShort}</div></div>
+</div>`;
+S.rwin=()=>`<div class="art" style="width:1080px;height:1920px">
+ <div style="position:absolute;left:80px;right:80px;top:120px">${lockup(58,28)}</div>
+ <div style="position:absolute;left:80px;right:80px;top:320px">
+   <div class="eyebrow" style="font-size:40px">Express Cup · Week ${R.n} winner</div>
+   <div class="title" style="font-size:200px;margin-top:24px;line-height:.86">${R.top5[0]}</div>
+   <div class="sub" style="font-size:50px;margin-top:34px">Closest to the pin at ${R.course}, hole ${R.hole}</div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:940px">
+   <div class="final" style="border-radius:10px;padding:40px 44px"><div class="k" style="font-size:34px">Wins</div><div class="v" style="font-size:72px;margin-top:14px;line-height:1.02">${R.prize}</div></div>
+   <div style="border:2px solid var(--line);border-radius:10px;padding:40px 44px;margin-top:30px"><div class="k" style="font-size:34px">Plus</div><div class="v" style="font-size:72px;margin-top:14px">A place in the semi-final</div></div>
+ </div>
+ <div style="position:absolute;left:80px;right:80px;top:1560px" class="p"><span style="font-size:48px">${R.entries} players entered. Well played, ${R.top5[0].split(' ')[0]}.</span></div>
+ <div class="legal" style="position:absolute;left:80px;right:80px;bottom:130px;font-size:38px">Next up: ${W.course} · Hole ${W.hole} · ${W.dayShort} · ${W.time}</div>
+</div>`;
+document.getElementById('root').innerHTML=S[f]();
+function pinTraces(){document.querySelectorAll('[data-pin]').forEach(box=>{
+  const img=box.querySelector('img'); const bw=box.clientWidth,bh=box.clientHeight;
+  const iw=img.naturalWidth,ih=img.naturalHeight,s=Math.max(bw/iw,bh/ih);
+  const ox=(bw-iw*s)/2, oy=(bh-ih*s)/2;
+  const px=ox+W.pin[0]*iw*s, py=oy+W.pin[1]*ih*s;
+  const sx=bw*(box.dataset.sx?+box.dataset.sx:0.80), sy=bh*1.0, cx=(sx+px)/2+bw*0.02, cy=-bh*0.36;
+  const sw=Math.max(4,bw*0.0052);
+  box.insertAdjacentHTML('beforeend',`<svg viewBox="0 0 ${bw} ${bh}" style="position:absolute;left:0;top:0;width:${bw}px;height:${bh}px;pointer-events:none">
+   <path d="M${sx},${sy} Q${cx},${cy} ${px},${py}" fill="none" stroke="#85FF85" stroke-opacity=".35" stroke-width="${sw*3}" stroke-linecap="round"/>
+   <path d="M${sx},${sy} Q${cx},${cy} ${px},${py}" fill="none" stroke="#85FF85" stroke-width="${sw}" stroke-linecap="round"/>
+   <circle cx="${px}" cy="${py}" r="${sw*1.7}" fill="#fff" stroke="#85FF85" stroke-width="${sw*.8}"/></svg>`);});}
+
+Promise.all([document.fonts.ready,...[...document.images].map(i=>i.complete?1:new Promise(r=>i.addEventListener('load',r)))]).then(()=>{pinTraces();setTimeout(()=>{document.body.dataset.ready=1},50)});
+</script>
+</body>
+</html>
