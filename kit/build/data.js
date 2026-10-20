@@ -28,12 +28,15 @@ window.EG = {
   results: {
     n: 3, course: "Royal Troon", hole: 8, yards: 120, day: "Monday 19 October",
     entries: 29,
-    prize: "Pro V1 dozen + Titleist Players glove",
+    prize: "Pro V1 Dozen / Titleist Players Glove",
     top5: ["Phelpsy", "JFewster", "Pixiepad71", "Sparky666", "WillThornber"],
     standings: [
       ["1=", "BenKGolf", 5, "W"], ["1=", "Rob Templeton", 5, "W"], ["1=", "Phelpsy", 5, "W"],
       ["4=", "gbartle", 4], ["4=", "Zainrehman1881", 4], ["4=", "JFewster", 4],
-      ["7", "Bidipbip", 4], ["8", "Jl9595", 4]
+      ["7", "Bidipbip", 4], ["8", "Jl9595", 4],
+      ["9=", "DeeLowley", 3], ["9=", "Pixiepad71", 3],
+      ["11", "Sparky666", 2],
+      ["12=", "Joebrown27", 1], ["12=", "WillThornber", 1]
     ]
   }
 };
