@@ -26,14 +26,14 @@ window.EG = {
   points: [5, 4, 3, 2, 1],
   url: "expressgolf.co.uk/express-cup",
   results: {
-    n: 2, course: "Celtic Manor", hole: 10, yards: 115, day: "Monday 12 October",
-    entries: 17,
-    prize: "TaylorMade TP5 dozen + TP glove",
-    top5: ["Rob Templeton", "Zainrehman1881", "DeeLowley", "Jl9595", "Bidipbip"],
+    n: 3, course: "Royal Troon", hole: 8, yards: 120, day: "Monday 19 October",
+    entries: 29,
+    prize: "Pro V1 dozen + Titleist Players glove",
+    top5: ["Phelpsy", "JFewster", "Pixiepad71", "Sparky666", "WillThornber"],
     standings: [
-      ["1=", "BenKGolf", 5, "W"], ["1=", "Rob Templeton", 5, "W"],
-      ["3=", "gbartle", 4], ["3=", "Zainrehman1881", 4], ["5", "Bidipbip", 4],
-      ["6", "Jl9595", 4], ["7", "DeeLowley", 3], ["8", "Joebrown27", 1]
+      ["1=", "BenKGolf", 5, "W"], ["1=", "Rob Templeton", 5, "W"], ["1=", "Phelpsy", 5, "W"],
+      ["4=", "gbartle", 4], ["4=", "Zainrehman1881", 4], ["4=", "JFewster", 4],
+      ["7", "Bidipbip", 4], ["8", "Jl9595", 4]
     ]
   }
 };
