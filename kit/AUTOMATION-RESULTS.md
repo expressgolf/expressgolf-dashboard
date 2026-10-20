@@ -22,7 +22,8 @@ a winner feed post and a winner story. Runs unattended after the TV-loop task.
    - Import `r1.png` (and optionally `r2.png`, `r3.png`) to WP Media Library via `upsolution-upload-media` from the raw URL → gives a public wp-content URL.
    - Winner **feed post**: `INSTAGRAM_CREATE_POST` / `INSTAGRAM_POST_IG_USER_MEDIA` (image_url = the WP URL, caption below) → `INSTAGRAM_PUBLISH_IG_MEDIA`.
    - Winner **story**: same import for `rstory.png` → create media with **media_type = STORIES** → publish. No link sticker.
-7. **Report** to Paul: the two permalinks + note which week, and that the TV standings slide refreshes on the next TV-loop run.
+7. **Drive copy.** Parent = WEEKLY CONTENT folder id `1iG0O6nykoQlMYSgx5-hDKltOGHewUQwG`. Find or create a folder `Week NN – <Course> – Results` under it (native Google_Drive search_files / create_file, mimeType `application/vnd.google-apps.folder`). Upload r1 (winner feed), r3 (standings), rstory (winner story) from their raw GitHub URLs via Composio `GOOGLEDRIVE_UPLOAD_FROM_URL` (account `info`, parent_folder_id = the folder id). Friendly names: `Week NN – Winner post.png`, `Week NN – Standings.png`, `Week NN – Winner story.png`. Skip files already there.
+8. **Report** to Paul: the two Instagram permalinks + note which week, the Drive folder link, and that the TV standings slide refreshes on the next TV-loop run.
 
 ## Caption (feed)
 Winner announcement, plain text. Template:
