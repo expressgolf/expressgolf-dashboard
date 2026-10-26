@@ -19,10 +19,11 @@ Rebuilds the in-store Toptracer "Express Cup" TV loops each week and pushes them
    - Standings: comp sheet → **STANDINGS** tab (pos, player, points, wins). Use the latest entered (label `results.n` = last *completed+entered* week). Build `results.standings` as `[pos, player, points, "W" if a weekly winner]`.
 3. **QR:** `qrcode` (ERROR_CORRECT_M, box 20, border 1, black/white) of the join URL → `build/img/qr_weekNN.png`.
 4. **data.js:** update the `week{}` block (n, of:26, day, dayShort, time, course, courseFull, hole, yards, photo:`img/<slug>_inner.jpg`, card same, qr:`img/qr_weekNN.png`, pin, prize, joinUrl) and the `results{}` block (latest standings). Keep the rest.
-5. **Build:** `python3 render.py tv1 tv2 tv3 standingsTv overlay p1 p2 p3 p4 poverlay` then `bash build.sh`. Outputs in `out/`.
+5. **Build:** `python3 render.py tv tv1 tv2 tv3 standingsTv overlay p1 p2 p3 p4 poverlay` then `bash build.sh`. Outputs in `out/`.
    - Landscape loop: `out/tv-loop-1920x1080.mp4`
    - Sideways (for the portrait-mounted screen): `out/tv-portrait-loop-ROTATED-1920x1080.mp4`
-6. **Host:** copy both to `wkNN/` in this repo's `signage` branch; commit; push. Raw URLs:
+   - Landscape still (1920×1080): render `tv`, then convert to JPG: `python3 -c "from PIL import Image; Image.open('out/tv.png').convert('RGB').save('out/tv.jpg', quality=92)"`
+6. **Host:** copy the 2 loops AND `out/tv.jpg` (as `ExpressCup-WkNN-TV-still-landscape.jpg`) to `wkNN/` in this repo's `signage` branch; commit; push. Raw URLs:
    `https://raw.githubusercontent.com/expressgolf/expressgolf-dashboard/signage/wkNN/<file>`
 7. **Yodeck** (workspace 257312):
    - `uploadMediaFromUrl` both (media_type video, url_type download). Names: `Express Cup WkNN <Course> - LANDSCAPE screen` / `- SIDEWAYS screen`.
@@ -34,7 +35,8 @@ Rebuilds the in-store Toptracer "Express Cup" TV loops each week and pushes them
 8. **Drive copy.** Put the week's assets in Google Drive for Paul + staff. Parent = WEEKLY CONTENT folder id `1iG0O6nykoQlMYSgx5-hDKltOGHewUQwG`.
    - Find or create a folder named `Week NN – <Course> – Monday` under it (native Google_Drive: search_files for the name under that parent; if missing, create_file with mimeType `application/vnd.google-apps.folder`, parentId = WEEKLY CONTENT).
    - Upload the week's hosted files from their raw GitHub URLs into that folder via Composio `GOOGLEDRIVE_UPLOAD_FROM_URL` (account `info`, parent_folder_id = the folder id). Include whatever is in `wkNN/`: the 2 TV videos always; the social pack (feed, teaser, tstory1-3, poster) if present. Use friendly names: `Week NN – TV loop (landscape).mp4` (from `wkNN/tv-loop-1920x1080.mp4`), `Week NN – TV loop (portrait screen).mp4` (from `wkNN/tv-portrait-loop-ROTATED-1920x1080.mp4`), `Week NN – Feed post.png`, `Week NN – Sunday teaser.png`, `Week NN – Story 1/2/3.png`, `Week NN – Poster A4.pdf`.
-   - **The 2 TV videos REPLACE, don't skip:** this task rebuilds them every run, so if a same-name TV-loop file already exists in the folder, trash it first (native Google_Drive trash_file), THEN upload — otherwise a corrected rebuild never reaches Drive. For the social pack + poster, skip (don't duplicate) files already there.
+   - Also upload the landscape still `wkNN/ExpressCup-WkNN-TV-still-landscape.jpg` as `Week NN – TV still (landscape).jpg`.
+   - **The 2 TV videos AND the landscape still REPLACE, don't skip:** this task rebuilds them every run, so if a same-name TV-loop or TV-still file already exists in the folder, trash it first (native Google_Drive trash_file), THEN upload — otherwise a corrected rebuild never reaches Drive. For the social pack + poster, skip (don't duplicate) files already there.
 9. **Report** to Paul: still preview + which screens, and the reminder: *publish that week's Toptracer event in TRMS or the QR won't resolve*. Note standings reflect the last entered week. Include the Drive folder link.
 
 ## Notes
