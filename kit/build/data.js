@@ -4,20 +4,20 @@ window.EG = {
   comp: "Express Cup",
   game: "Closest to the Pin",
   week: {
-    n: 4, of: 26,
-    day: "Monday 26 October",
-    dayShort: "Mon 26 Oct",
+    n: 5, of: 26,
+    day: "Monday 2 November",
+    dayShort: "Mon 2 Nov",
     time: "3pm – 9pm",
-    course: "Gleneagles King's",
-    courseFull: "Gleneagles, King's Course",
-    hole: 5,
-    yards: 131,
-    photo: "img/w04_gleneagles5_inner.jpg",
-    card: "img/w04_gleneagles5_inner.jpg",
-    qr: "img/qr_week04.png",
-    pin: [0.41, 0.36],
-    prize: "Callaway Halloween Ball / Tour Authentic Ball",
-    joinUrl: "https://api.toptracer.com/app/event?eventid=cbcc5d73-1c01-48e7-8d0e-0bfd8272d806"
+    course: "Kiawah Island",
+    courseFull: "Kiawah Island, Ocean Course",
+    hole: 17,
+    yards: 126,
+    photo: "img/w05_kiawah17_inner.jpg",
+    card: "img/w05_kiawah17_inner.jpg",
+    qr: "img/qr_week05.png",
+    pin: [0.38, 0.43],
+    prize: "Ping Freddie Jumper",
+    joinUrl: "https://api.toptracer.com/app/event?eventid=fe8851ee-ca63-43b1-aec2-3cc0a1a4ab5c"
   },
   prize: {
     weekly: "Weekly prize + a semi-final place",
@@ -26,17 +26,20 @@ window.EG = {
   points: [5, 4, 3, 2, 1],
   url: "expressgolf.co.uk/express-cup",
   results: {
-    n: 3, course: "Royal Troon", hole: 8, yards: 120, day: "Monday 19 October",
+    n: 4, course: "Gleneagles King's", hole: 5, yards: 131, day: "Monday 26 October",
     entries: 29,
-    prize: "Pro V1 Dozen / Titleist Players Glove",
+    prize: "Callaway Halloween Ball / Tour Authentic Ball",
     top5: ["Phelpsy", "JFewster", "Pixiepad71", "Sparky666", "WillThornber"],
     standings: [
-      ["1=", "BenKGolf", 5, "W"], ["1=", "Rob Templeton", 5, "W"], ["1=", "Phelpsy", 5, "W"],
-      ["4=", "gbartle", 4], ["4=", "Zainrehman1881", 4], ["4=", "JFewster", 4],
-      ["7", "Bidipbip", 4], ["8", "Jl9595", 4],
-      ["9=", "DeeLowley", 3], ["9=", "Pixiepad71", 3],
-      ["11", "Sparky666", 2],
-      ["12=", "Joebrown27", 1], ["12=", "WillThornber", 1]
+      ["1", "Phelpsy", 10, "W"],
+      ["2", "DeeLowley", 7],
+      ["3=", "BenKGolf", 5, "W"], ["3=", "Rob Templeton", 5, "W"],
+      ["5", "Jl9595", 5],
+      ["6=", "gbartle", 4], ["6=", "Zainrehman1881", 4], ["6=", "JFewster", 4],
+      ["9", "Bidipbip", 4],
+      ["10=", "Pixiepad71", 3], ["10=", "Georgebest1", 3],
+      ["12=", "Sparky666", 2], ["12=", "KawishK", 2],
+      ["14=", "Joebrown27", 1], ["14=", "WillThornber", 1]
     ]
   }
 };
