@@ -27,9 +27,9 @@ window.EG = {
   url: "expressgolf.co.uk/express-cup",
   results: {
     n: 4, course: "Gleneagles King's", hole: 5, yards: 131, day: "Monday 26 October",
-    entries: 29,
+    entries: 23,
     prize: "Callaway Halloween Ball / Tour Authentic Ball",
-    top5: ["Phelpsy", "JFewster", "Pixiepad71", "Sparky666", "WillThornber"],
+    top5: ["Phelpsy", "DeeLowley", "Georgebest1", "KawishK", "Jl9595"],
     standings: [
       ["1", "Phelpsy", 10, "W"],
       ["2", "DeeLowley", 7],
