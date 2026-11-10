@@ -26,21 +26,22 @@ window.EG = {
   points: [5, 4, 3, 2, 1],
   url: "expressgolf.co.uk/express-cup",
   results: {
-    n: 5, course: "Kiawah Island", hole: 17, yards: 126, day: "Monday 2 November",
-    entries: 29,
-    prize: "Ping Freddie Jumper",
-    top5: ["KawishK", "DanHart91", "Archie2006", "AdeRob", "DeeLowley"],
+    n: 6, course: "Pinehurst No.2", hole: 6, yards: 110, day: "Monday 9 November",
+    entries: 38,
+    prize: "Adidas Elevated Pullover Hoodie",
+    top5: ["KSmith95", "Phelpsy", "KawishK", "AdeRob", "Davelufc10"],
     standings: [
-      ["1", "Phelpsy", 10, "W"],
-      ["2", "DeeLowley", 8],
-      ["3", "KawishK", 7, "W"],
-      ["4=", "BenKGolf", 5, "W"], ["4=", "Rob Templeton", 5, "W"],
-      ["6", "Jl9595", 5],
-      ["7=", "gbartle", 4], ["7=", "Zainrehman1881", 4], ["7=", "JFewster", 4], ["7=", "DanHart91", 4],
-      ["11", "Bidipbip", 4],
-      ["12=", "Pixiepad71", 3], ["12=", "Georgebest1", 3], ["12=", "Archie2006", 3],
-      ["15=", "Sparky666", 2], ["15=", "AdeRob", 2],
-      ["17=", "Joebrown27", 1], ["17=", "WillThornber", 1]
+      ["1", "Phelpsy", 14, "W"],
+      ["2", "KawishK", 10, "W"],
+      ["3", "DeeLowley", 8],
+      ["4=", "BenKGolf", 5, "W"], ["4=", "Rob Templeton", 5, "W"], ["4=", "KSmith95", 5, "W"],
+      ["7", "Jl9595", 5],
+      ["8=", "gbartle", 4], ["8=", "Zainrehman1881", 4], ["8=", "JFewster", 4], ["8=", "DanHart91", 4],
+      ["12", "Bidipbip", 4],
+      ["13", "AdeRob", 4],
+      ["14=", "Pixiepad71", 3], ["14=", "Georgebest1", 3], ["14=", "Archie2006", 3],
+      ["17", "Sparky666", 2],
+      ["18=", "Joebrown27", 1], ["18=", "WillThornber", 1], ["18=", "Davelufc10", 1]
     ]
   }
 };
