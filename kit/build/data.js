@@ -26,24 +26,25 @@ window.EG = {
   points: [5, 4, 3, 2, 1],
   url: "expressgolf.co.uk/express-cup",
   results: {
-    n: 7, course: "Spyglass Hill", hole: 3, yards: 95, day: "Monday 16 November",
-    entries: 27,
-    prize: "Under Armour Varsity Pullover / M Storm CGI Beanie",
-    top5: ["TIGERMOSES", "Zainrehman1881", "KSmith95", "Aahil", "MattyMorris1987"],
+    n: 8, course: "Naruo", hole: 12, yards: 137, day: "Monday 23 November",
+    entries: 19,
+    prize: "TaylorMade TP5 Dozen / TP Glove",
+    top5: ["KSmith95", "JamieMangham", "Gazaz18", "Zainrehman1881", "gbartle"],
     standings: [
       ["1", "Phelpsy", 14, "W"],
-      ["2", "KawishK", 10, "W"],
-      ["3", "KSmith95", 8, "W"],
-      ["4", "Zainrehman1881", 8],
+      ["2", "KSmith95", 13, "W"],
+      ["3", "KawishK", 10, "W"],
+      ["4", "Zainrehman1881", 10],
       ["5", "DeeLowley", 8],
       ["6=", "BenKGolf", 5, "W"], ["6=", "Rob Templeton", 5, "W"], ["6=", "TIGERMOSES", 5, "W"],
-      ["9", "Jl9595", 5],
-      ["10=", "gbartle", 4], ["10=", "JFewster", 4], ["10=", "DanHart91", 4],
-      ["13", "Bidipbip", 4],
-      ["14", "AdeRob", 4],
-      ["15=", "Pixiepad71", 3], ["15=", "Georgebest1", 3], ["15=", "Archie2006", 3],
-      ["18=", "Sparky666", 2], ["18=", "Aahil", 2],
-      ["20=", "Joebrown27", 1], ["20=", "WillThornber", 1], ["20=", "Davelufc10", 1], ["20=", "MattyMorris1987", 1]
+      ["9", "gbartle", 5],
+      ["10", "Jl9595", 5],
+      ["11=", "JFewster", 4], ["11=", "DanHart91", 4], ["11=", "JamieMangham", 4],
+      ["14", "Bidipbip", 4],
+      ["15", "AdeRob", 4],
+      ["16=", "Pixiepad71", 3], ["16=", "Georgebest1", 3], ["16=", "Archie2006", 3], ["16=", "Gazaz18", 3],
+      ["20=", "Sparky666", 2], ["20=", "Aahil", 2],
+      ["22=", "Joebrown27", 1], ["22=", "WillThornber", 1], ["22=", "Davelufc10", 1], ["22=", "MattyMorris1987", 1]
     ]
   }
 };
